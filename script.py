@@ -6,9 +6,10 @@ result_max_characters = 2000
 
 
 def input_modifier(string, state):
-    if string.strip().lower().startswith("search:"):
-        print(f"Performing web search: {string.strip().lower()}")
+    if string.strip().lower().startswith("duckduckgo:"):
         searchstring = string[len("search:") :].strip()
+        print(f"Performing duckduckgo search: {searchstring}")
+
         url = f"https://duckduckgo.com/html?q={searchstring}"
         headers = {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36"
@@ -19,12 +20,14 @@ def input_modifier(string, state):
         for result in soup.select(".result__url"):
             url = result.text.strip()
             if url != "":  # skip any empty urls
+                print(f"possible search url: {url}")
                 result_urls.append(url)
         texts = string + " "
         count = 0
         for result_url in result_urls:
             try:
                 if count <= max_results:
+                    print(f"querying url: {result_url}")
                     response = requests.get("https://" + result_url, headers=headers)
                     soup = BeautifulSoup(response.content, "html.parser")
                     text = (
