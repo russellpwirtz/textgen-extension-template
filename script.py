@@ -5,8 +5,9 @@ max_results = 3
 result_max_characters = 2000
 
 
-def input_modifier(string):
+def input_modifier(string, state):
     if string.strip().lower().startswith("search:"):
+        print(f"Performing web search: {string.strip().lower()}")
         searchstring = string[len("search:") :].strip()
         url = f"https://duckduckgo.com/html?q={searchstring}"
         headers = {
@@ -41,6 +42,7 @@ def input_modifier(string):
         print(texts)
         return texts
     else:
+        print(f"NOT Performing web search: {string.strip().lower()}")
         return string
 
 
